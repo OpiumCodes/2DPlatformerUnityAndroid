@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    public float speed = 10f, jumpvelocity = 300f;//Speed se adauga la vectorul de velocity al caracterului pentru a-l misca cu atatia pixeli jump la fel
+    public float speed = 10f, jumpvelocity = 50f;//Speed se adauga la vectorul de velocity al caracterului pentru a-l misca cu atatia pixeli jump la fel
     private Transform myTransform;//Asta e un fel de state of an object
     private Rigidbody2D myRB;//Asta e playerul principal
     public LayerMask Ground;//Cu asta arat indicatorului de ground ce este un ground, adica un layer in plus ce il pun peste obiectele ce le consider ground
@@ -23,18 +23,20 @@ public class PlayerController : MonoBehaviour
     {
         Debug.Log("Velocity="+myRB.velocity);
         Grounded = Physics2D.OverlapCircle(GroundCheck.position, groundCheckRadius, Ground);
-#if !UNITY_ADROID//Cu asta verific daca e pe android sau nu, adica pe desktop sa mearga butoanele si pe android doar alea de pe ecran
+#if UNITY_ADROID//Cu asta verific daca e pe android sau nu, adica pe desktop sa mearga butoanele si pe android doar alea de pe ecran
         Move(Input.GetAxisRaw("Horizontal"));//Asta verifica daca e input pe axa stanga dreapta si o apeleaza
         if (Input.GetButtonDown("Jump"))//Asta verifica daca e input default de jump adica space sau sageata sus
         {
             Jump();//Functia de jump definita mai jos
         }
 #else
-        Move(hInput);//Asta e functia speciala pentru mutat cu input din UI care practic face acelasi lucru ca si Move doar ca tine minte o stare ca sa se miste smooth
+        if(hInput!=0)
+            Move(hInput);//Asta e functia speciala pentru mutat cu input din UI care practic face acelasi lucru ca si Move doar ca tine minte o stare ca sa se miste smooth
+        
 #endif
 
     }
-    void Move(float horizontalInput)
+    public void Move(float horizontalInput)
     {
         myRB.velocity = new Vector2(horizontalInput*speed,0);//Adauga le vectorul de velocity input orizontal adica -1 sau +1 stanga/dreapta * viteza pe axa stanga dreapta
     }
@@ -43,8 +45,10 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Jump pressed");
         if (Grounded)//Daca e grounded
         {
-            myRB.velocity += jumpvelocity * Vector2.up;//Inmulteste velocity de sus cu cat vrei sa sara in float 
+            myRB.velocity = new Vector2(0, 50f);
+            //myRB.velocity += jumpvelocity * Vector2.up;//Inmulteste velocity de sus cu cat vrei sa sara in float 
             Debug.Log(myRB.velocity);
+            
         }
 
     }
