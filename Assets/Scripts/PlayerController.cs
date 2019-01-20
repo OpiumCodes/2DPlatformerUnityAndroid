@@ -5,44 +5,51 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-    public float speed = 10f, jumpvelocity = 10f;
+    public float speed = 10f, jumpvelocity = 300f;
     private Transform myTransform,tagGround;
     private Rigidbody2D myRB;
-    private LayerMask playerMask;
-    public bool isGround = false;
+    public LayerMask Ground;
+    public Transform GroundCheck;
+    private float groundCheckRadius = 0.1f;
+    public bool Grounded;
+    private float hInput =0;
     void Start()
     {
-        tagGround = GameObject.Find("tag_ground").transform;
-        if (tagGround != null)
-            Debug.Log("Found tag_ground");
         myRB = GetComponent<Rigidbody2D>();
         myTransform = this.transform;
     }
 
     void FixedUpdate()
     {
-        isGround = Physics2D.Linecast(myTransform.position, tagGround.position);
-        if(isGround==false)
-        {
-            Debug.Log("Not Touching Ground");
-        }
-        else
-        {
-            Debug.Log("Touching ground");
-        }
+        Grounded = Physics2D.OverlapCircle(GroundCheck.position, groundCheckRadius, Ground);
+#if UNITY_ADROID
         Move(Input.GetAxisRaw("Horizontal"));
         if (Input.GetButtonDown("Jump"))
         {
             Jump();
         }
+#else
+        Move(hInput);
+#endif
+
     }
-    public void Move(float horizontalInput)
+    void Move(float horizontalInput)
     {
         myRB.velocity = new Vector2(horizontalInput*speed,0);
     }
     public void Jump()
     {
-        if(isGround)
-        myRB.velocity += jumpvelocity*Vector2.up;
+        Debug.Log("Jump pressed");
+        if (Grounded)
+        {
+            myRB.velocity += jumpvelocity * Vector2.up;
+            Debug.Log(myRB.velocity);
+        }
+
+    }
+
+    public void StartMoving(float horizontalInput)
+    {
+        hInput = horizontalInput;
     }
 }
