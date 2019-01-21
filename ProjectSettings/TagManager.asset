@@ -13,6 +13,7 @@ TagManager:
   - BombPickup
   - ExplosionFX
   - HealthBar
+  - killbox
   layers:
   - Default
   - TransparentFX
