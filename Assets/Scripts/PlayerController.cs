@@ -33,10 +33,11 @@ public class PlayerController : MonoBehaviour
 #else
         if(hInput!=0)
             Move(hInput);//Asta e functia speciala pentru mutat cu input din UI care practic face acelasi lucru ca si Move doar ca tine minte o stare ca sa se miste smooth
+        
 #endif
 
     }
-    void Move(float horizontalInput)
+    public void Move(float horizontalInput)
     {
         myRB.velocity = new Vector2(horizontalInput*speed,0);//Adauga le vectorul de velocity input orizontal adica -1 sau +1 stanga/dreapta * viteza pe axa stanga dreapta
     }
@@ -45,8 +46,10 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Jump pressed");
         if (Grounded)//Daca e grounded
         {
-            myRB.velocity += jumpvelocity * Vector2.up;//Inmulteste velocity de sus cu cat vrei sa sara in float 
+            myRB.velocity = new Vector2(0, 50f);
+            //myRB.velocity += jumpvelocity * Vector2.up;//Inmulteste velocity de sus cu cat vrei sa sara in float 
             Debug.Log(myRB.velocity);
+            
         }
 
     }
