@@ -49,6 +49,9 @@ public class Enemy : MonoBehaviour
     {
         return new Vector2(v3.x,v3.y);
     }
-
+    public void Hurt()
+    {
+        Destroy(this.gameObject);
+    }
 }
 
